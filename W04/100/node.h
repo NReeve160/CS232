@@ -15,7 +15,7 @@
  *        Node         : A class representing a Node
  *    Additionally, it will contain a few functions working on Node
  * Author
- *    <your names here>
+ *    David Sloan
  ************************************************************************/
 
 #pragma once
