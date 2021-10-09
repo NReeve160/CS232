@@ -31,25 +31,28 @@
  * List class can make validation decisions
  *************************************************/
 template <class T>
-class Node
-{
+class Node {
 public:
 
    //
    // Construct
    //
 
-   Node()
-   {
-      pPrev = pNext = this;
+   Node() {
+      // data = T(); //TODO
+      pPrev = nullptr;
+      pNext = nullptr;
    }
-   Node(const T &  data)
-   {
-      pPrev = pNext = this;
+
+   Node(const T &  data) {
+      // data = t; //TODO
+      pPrev = nullptr;
+      pNext = nullptr;
    }
-   Node(      T && data)
-   {
-      pPrev = pNext = this;
+
+   Node(      T && data) {
+      pPrev = this;
+      pNext = this;
    }
 
    //
@@ -70,9 +73,21 @@ public:
  *   COST   : O(n)
  **********************************************/
 template <class T>
-inline Node <T> * copy(const Node <T> * pSource) 
-{
-   return new Node<T>;
+inline Node <T> * copy(const Node <T> * pSource) {
+   Node <T> * pDestination = new Node <T> (pSource->data);
+
+   // Node <T> * pSrc = pSource;
+   // Node <T> * pDes = pDestination;
+
+   // for (pSrc = pSrc->pNext; pSrc; pSrc->pNext) {
+   //    pDes = insert(pSrc->data, pDes, true);
+   // }
+
+   // for (pSource = pSource->pNext; pSource; pSource->pNext) {
+   //    pDestination = insert(pSource->data, pDestination, true);
+   // }
+   
+   return pDestination;
 }
 
 /***********************************************
@@ -84,8 +99,7 @@ inline Node <T> * copy(const Node <T> * pSource)
  *   COST   : O(n)
  **********************************************/
 template <class T>
-inline void assign(Node <T> * & pDestination, const Node <T> * pSource)
-{
+inline void assign(Node <T> * & pDestination, const Node <T> * pSource) {
    
 }
 
@@ -95,8 +109,7 @@ inline void assign(Node <T> * & pDestination, const Node <T> * pSource)
  *   COST   : O(1)
  **********************************************/
 template <class T>
-inline void swap(Node <T>* &pLHS, Node <T>* &pRHS)
-{
+inline void swap(Node <T>* &pLHS, Node <T>* &pRHS) {
 
 }
 
@@ -108,8 +121,7 @@ inline void swap(Node <T>* &pLHS, Node <T>* &pRHS)
  *   COST   : O(1)
  **********************************************/
 template <class T>
-inline Node <T> * remove(const Node <T> * pRemove) 
-{
+inline Node <T> * remove(const Node <T> * pRemove)  {
    return new Node <T>;
 }
 
@@ -127,8 +139,11 @@ inline Node <T> * remove(const Node <T> * pRemove)
 template <class T>
 inline Node <T> * insert(Node <T> * pCurrent,
                   const T & t,
-                  bool after = false)
-{
+                  bool after) {
+   if (after) {
+      //do stuff
+   }
+
    return new Node <T>;
 }
 
@@ -142,8 +157,7 @@ inline Node <T> * insert(Node <T> * pCurrent,
  *  COST    : O(n)
  ********************************************************/
 template <class T>
-inline size_t size(const Node <T> * pHead)
-{
+inline size_t size(const Node <T> * pHead) {
    return 99;
 }
 
@@ -156,8 +170,7 @@ inline size_t size(const Node <T> * pHead)
  *    COST   : O(n)
  **********************************************/
 template <class T>
-inline std::ostream & operator << (std::ostream & out, const Node <T> * pHead)
-{
+inline std::ostream & operator << (std::ostream & out, const Node <T> * pHead) {
    return out;
 }
 
@@ -169,9 +182,6 @@ inline std::ostream & operator << (std::ostream & out, const Node <T> * pHead)
  *   COST    : O(n)
  ****************************************************/
 template <class T>
-inline void clear(Node <T> * & pHead)
-{
+inline void clear(Node <T> * & pHead) {
 
 }
-
-
