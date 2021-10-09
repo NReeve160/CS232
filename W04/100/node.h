@@ -47,9 +47,16 @@ public:
    {
       pPrev = pNext = this;
    }
+<<<<<<< Updated upstream
    Node(      T && data)
    {
       pPrev = pNext = this;
+=======
+
+   Node(      T && data) {
+      pPrev = nullptr;
+      pNext = nullptr;
+>>>>>>> Stashed changes
    }
 
    //
@@ -70,9 +77,28 @@ public:
  *   COST   : O(n)
  **********************************************/
 template <class T>
+<<<<<<< Updated upstream
 inline Node <T> * copy(const Node <T> * pSource) 
 {
    return new Node<T>;
+=======
+inline Node <T> * copy(const Node <T> * pSource) {
+   if (pSource == nullptr) {
+        return nullptr;
+   }
+   
+   Node <T> * pDestination = new Node <T> (pSource->data);
+
+   const Node <T> * pSrc = pSource;
+   Node <T> * pDes = pDestination;
+
+   //TODO: Finish 
+   for (pSrc = pSrc->pNext; pSrc; pSrc->pNext) {
+      pDes = insert(pDes, pSrc->data, true);
+   }
+   
+   return pDestination;
+>>>>>>> Stashed changes
 }
 
 /***********************************************
@@ -127,9 +153,33 @@ inline Node <T> * remove(const Node <T> * pRemove)
 template <class T>
 inline Node <T> * insert(Node <T> * pCurrent,
                   const T & t,
+<<<<<<< Updated upstream
                   bool after = false)
 {
    return new Node <T>;
+=======
+                  bool after)
+{
+   Node <T> * pNew = new Node <T> (t);
+
+   if (!pCurrent && !after) {
+      pCurrent = pNew->pNext;
+      pCurrent->pPrev = pNew->pPrev;
+      pCurrent->pPrev = pNew;
+
+      if (pNew->pPrev)
+         pNew = pNew->pPrev->pNext;
+   } else if (!pCurrent && after) {
+      pCurrent = pNew->pNext;
+      pCurrent->pPrev = pNew->pPrev;
+      pCurrent->pPrev = pNew;
+
+      if (pNew->pPrev)
+         pNew = pNew->pPrev->pNext;
+   }
+
+   return pNew;
+>>>>>>> Stashed changes
 }
 
 /******************************************************
