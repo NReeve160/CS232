@@ -39,17 +39,17 @@ public:
    // Construct
    //
 
-   Node()
+   Node<T>::Node()
    {
-      pPrev = pNext = this;
+      pPrev = pNext = nullptr;
    }
-   Node(const T &  data)
+   Node<T>::Node(const T &  data)
    {
-      pPrev = pNext = this;
+      pPrev = pNext = nullptr;
    }
-   Node(      T && data)
+   Node<T>::Node(      T && data)
    {
-      pPrev = pNext = this;
+      pPrev = pNext = nullptr;
    }
 
    //
