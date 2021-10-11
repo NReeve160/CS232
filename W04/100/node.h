@@ -31,28 +31,32 @@
  * List class can make validation decisions
  *************************************************/
 template <class T>
-class Node {
+class Node
+{
 public:
 
    //
    // Construct
    //
 
-   Node() {
-      // data = T(); //TODO
-      pPrev = nullptr;
-      pNext = nullptr;
+   Node()
+   {
+      pPrev = pNext = this;
    }
-
-   Node(const T &  data) {
-      // data = t; //TODO
-      pPrev = nullptr;
-      pNext = nullptr;
+   Node(const T &  data)
+   {
+      pPrev = pNext = this;
    }
+<<<<<<< Updated upstream
+   Node(      T && data)
+   {
+      pPrev = pNext = this;
+=======
 
    Node(      T && data) {
-      pPrev = this;
-      pNext = this;
+      pPrev = nullptr;
+      pNext = nullptr;
+>>>>>>> Stashed changes
    }
 
    //
@@ -73,21 +77,28 @@ public:
  *   COST   : O(n)
  **********************************************/
 template <class T>
+<<<<<<< Updated upstream
+inline Node <T> * copy(const Node <T> * pSource) 
+{
+   return new Node<T>;
+=======
 inline Node <T> * copy(const Node <T> * pSource) {
+   if (pSource == nullptr) {
+        return nullptr;
+   }
+   
    Node <T> * pDestination = new Node <T> (pSource->data);
 
-   // Node <T> * pSrc = pSource;
-   // Node <T> * pDes = pDestination;
+   const Node <T> * pSrc = pSource;
+   Node <T> * pDes = pDestination;
 
-   // for (pSrc = pSrc->pNext; pSrc; pSrc->pNext) {
-   //    pDes = insert(pSrc->data, pDes, true);
-   // }
-
-   // for (pSource = pSource->pNext; pSource; pSource->pNext) {
-   //    pDestination = insert(pSource->data, pDestination, true);
-   // }
+   //TODO: Finish 
+   for (pSrc = pSrc->pNext; pSrc; pSrc->pNext) {
+      pDes = insert(pDes, pSrc->data, true);
+   }
    
    return pDestination;
+>>>>>>> Stashed changes
 }
 
 /***********************************************
@@ -99,7 +110,8 @@ inline Node <T> * copy(const Node <T> * pSource) {
  *   COST   : O(n)
  **********************************************/
 template <class T>
-inline void assign(Node <T> * & pDestination, const Node <T> * pSource) {
+inline void assign(Node <T> * & pDestination, const Node <T> * pSource)
+{
    
 }
 
@@ -109,7 +121,8 @@ inline void assign(Node <T> * & pDestination, const Node <T> * pSource) {
  *   COST   : O(1)
  **********************************************/
 template <class T>
-inline void swap(Node <T>* &pLHS, Node <T>* &pRHS) {
+inline void swap(Node <T>* &pLHS, Node <T>* &pRHS)
+{
 
 }
 
@@ -121,7 +134,8 @@ inline void swap(Node <T>* &pLHS, Node <T>* &pRHS) {
  *   COST   : O(1)
  **********************************************/
 template <class T>
-inline Node <T> * remove(const Node <T> * pRemove)  {
+inline Node <T> * remove(const Node <T> * pRemove) 
+{
    return new Node <T>;
 }
 
@@ -139,12 +153,33 @@ inline Node <T> * remove(const Node <T> * pRemove)  {
 template <class T>
 inline Node <T> * insert(Node <T> * pCurrent,
                   const T & t,
-                  bool after) {
-   if (after) {
-      //do stuff
+<<<<<<< Updated upstream
+                  bool after = false)
+{
+   return new Node <T>;
+=======
+                  bool after)
+{
+   Node <T> * pNew = new Node <T> (t);
+
+   if (!pCurrent && !after) {
+      pCurrent = pNew->pNext;
+      pCurrent->pPrev = pNew->pPrev;
+      pCurrent->pPrev = pNew;
+
+      if (pNew->pPrev)
+         pNew = pNew->pPrev->pNext;
+   } else if (!pCurrent && after) {
+      pCurrent = pNew->pNext;
+      pCurrent->pPrev = pNew->pPrev;
+      pCurrent->pPrev = pNew;
+
+      if (pNew->pPrev)
+         pNew = pNew->pPrev->pNext;
    }
 
-   return new Node <T>;
+   return pNew;
+>>>>>>> Stashed changes
 }
 
 /******************************************************
@@ -157,7 +192,8 @@ inline Node <T> * insert(Node <T> * pCurrent,
  *  COST    : O(n)
  ********************************************************/
 template <class T>
-inline size_t size(const Node <T> * pHead) {
+inline size_t size(const Node <T> * pHead)
+{
    return 99;
 }
 
@@ -170,7 +206,8 @@ inline size_t size(const Node <T> * pHead) {
  *    COST   : O(n)
  **********************************************/
 template <class T>
-inline std::ostream & operator << (std::ostream & out, const Node <T> * pHead) {
+inline std::ostream & operator << (std::ostream & out, const Node <T> * pHead)
+{
    return out;
 }
 
@@ -182,6 +219,7 @@ inline std::ostream & operator << (std::ostream & out, const Node <T> * pHead) {
  *   COST    : O(n)
  ****************************************************/
 template <class T>
-inline void clear(Node <T> * & pHead) {
+inline void clear(Node <T> * & pHead)
+{
 
 }
