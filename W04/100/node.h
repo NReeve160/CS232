@@ -41,22 +41,15 @@ public:
 
    Node()
    {
-      pPrev = pNext = this;
+      pPrev = pNext = NULL;
    }
    Node(const T &  data)
    {
-      pPrev = pNext = this;
+      pPrev = pNext = NULL;
    }
-<<<<<<< Updated upstream
    Node(      T && data)
    {
-      pPrev = pNext = this;
-=======
-
-   Node(      T && data) {
-      pPrev = nullptr;
-      pNext = nullptr;
->>>>>>> Stashed changes
+      pPrev = pNext = NULL;
    }
 
    //
@@ -77,11 +70,6 @@ public:
  *   COST   : O(n)
  **********************************************/
 template <class T>
-<<<<<<< Updated upstream
-inline Node <T> * copy(const Node <T> * pSource) 
-{
-   return new Node<T>;
-=======
 inline Node <T> * copy(const Node <T> * pSource) {
    if (pSource == nullptr) {
         return nullptr;
@@ -93,12 +81,11 @@ inline Node <T> * copy(const Node <T> * pSource) {
    Node <T> * pDes = pDestination;
 
    //TODO: Finish 
-   for (pSrc = pSrc->pNext; pSrc; pSrc->pNext) {
+   for (pSrc = pSrc->pNext; pSrc; pSrc = pSrc->pNext) {
       pDes = insert(pDes, pSrc->data, true);
    }
    
    return pDestination;
->>>>>>> Stashed changes
 }
 
 /***********************************************
@@ -136,7 +123,28 @@ inline void swap(Node <T>* &pLHS, Node <T>* &pRHS)
 template <class T>
 inline Node <T> * remove(const Node <T> * pRemove) 
 {
-   return new Node <T>;
+   if (pRemove == NULL) {
+      return nullptr;
+   }
+
+   if (pRemove->pPrev) {
+      pRemove->pPrev->pNext = pRemove->pNext;
+   }
+
+   if (pRemove->pNext) {
+      pRemove->pNext->pPrev = pRemove->pPrev;
+   }
+
+   Node <T> * pReturn;
+
+   if (pRemove->pPrev) {
+      pReturn = pRemove->pPrev;
+   } else {
+      pReturn = pRemove->pNext;
+   }
+
+   delete pRemove;
+   return pReturn;
 }
 
 /**********************************************
@@ -153,48 +161,53 @@ inline Node <T> * remove(const Node <T> * pRemove)
 template <class T>
 inline Node <T> * insert(Node <T> * pCurrent,
                   const T & t,
-<<<<<<< Updated upstream
-                  bool after = false)
-{
-   return new Node <T>;
-=======
                   bool after)
 {
    Node <T> * pNew = new Node <T> (t);
 
-   if (!pCurrent && !after) {
-      pCurrent = pNew->pNext;
-      pCurrent->pPrev = pNew->pPrev;
+   if (pCurrent != NULL && after == false) {
+      pNew->pNext = pCurrent;
+      pNew->pPrev = pCurrent->pPrev;
       pCurrent->pPrev = pNew;
 
-      if (pNew->pPrev)
-         pNew = pNew->pPrev->pNext;
-   } else if (!pCurrent && after) {
-      pCurrent = pNew->pNext;
-      pCurrent->pPrev = pNew->pPrev;
-      pCurrent->pPrev = pNew;
+      if (pNew->pPrev) {
+         pNew->pPrev->pNext = pNew;
+      }
 
-      if (pNew->pPrev)
-         pNew = pNew->pPrev->pNext;
+   } 
+   
+   if (pCurrent != NULL && after == true) {
+      pNew->pNext = pCurrent;
+      pNew->pPrev = pCurrent->pPrev;
+      pCurrent->pNext = pNew;
+
+      if (pNew->pNext) {
+         pCurrent->pPrev = pNew;
+      }
    }
 
    return pNew;
->>>>>>> Stashed changes
 }
 
 /******************************************************
- * FIND
- * Find a given node in an unsorted linked list.  Return
- * a pointer to the node if it is found, NULL otherwise.
- *  INPUT   : a pointer to the head of the linked list
- *            the value to be found
- *  OUTPUT  : a pointer to the node if it is found
+ * Size
+ * Return the size of the linked list.
+ *  INPUT   : a pointer to the head of the linked list.
+ *  OUTPUT  : the number of the size of the linked list.
  *  COST    : O(n)
  ********************************************************/
 template <class T>
 inline size_t size(const Node <T> * pHead)
 {
-   return 99;
+   int s = 0;
+
+   const Node <T> * p;
+
+   for (p = pHead; p; p = p->pNext) {
+     s++;
+   }
+
+   return s;
 }
 
 /***********************************************
@@ -221,5 +234,13 @@ inline std::ostream & operator << (std::ostream & out, const Node <T> * pHead)
 template <class T>
 inline void clear(Node <T> * & pHead)
 {
+   Node <T> * pDelete;
 
+   while (pHead != NULL) {
+      pDelete = pHead;
+
+      pHead = pHead->pNext;
+
+      delete pDelete;
+   }
 }
