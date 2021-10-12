@@ -39,19 +39,16 @@ public:
 
     Node() : data(T())
    { 
-       pNext = NULL;
-       pPrev = NULL;
+      pNext = pPrev = NULL;
    }
    Node(const T& data) : data(data)
    {
-       pNext = NULL;
-       pPrev = NULL;
+      pNext = pPrev = NULL;
    }
 
    Node(T&& data) : data(data)
    {
-       pNext = NULL;
-       pPrev = NULL;
+      pNext = pPrev = NULL;
    }
 
    //
