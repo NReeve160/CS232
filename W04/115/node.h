@@ -18,7 +18,6 @@
  ************************************************************************/
 
 #pragma once
-
 #include <cassert>     // for ASSERT
 #include <iostream>    // for NULL
 
