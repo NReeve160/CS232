@@ -199,6 +199,7 @@ BNode <T> * copy(const BNode <T> * pSrc)
 template <class T>
 void assign(BNode <T> * & pDest, const BNode <T>* pSrc)
 {
+   
     if (!pSrc) {
         clear(pDest);
         return;
@@ -206,22 +207,22 @@ void assign(BNode <T> * & pDest, const BNode <T>* pSrc)
     if (!pDest && pSrc) {
         pDest = new BNode <T> (pSrc->data);
         
-       // pDest->pParent = pSrc->pParent;
-        //pDest->pLeft = pSrc->pLeft;
-        //pDest->pRight = pSrc->pRight;
-        
         assign(pDest->pRight, pSrc->pRight);
         assign(pDest->pLeft, pSrc->pLeft);
+        if (pDest->pRight)
+            pDest->pRight->pParent = pDest;
+        if (pDest->pLeft)
+            pDest->pLeft->pParent = pDest;
     }
     if (pDest && pSrc) {
         
         pDest->data = pSrc->data;
         
-        pDest->pParent = pSrc->pParent;
-        pDest->pLeft = pSrc->pLeft;
-        pDest->pRight = pSrc->pRight;
-        
         assign(pDest->pRight, pSrc->pRight);
         assign(pDest->pLeft, pSrc->pLeft);
+        if (pDest->pRight)
+            pDest->pRight->pParent = pDest;
+        if (pDest->pLeft)
+            pDest->pLeft->pParent = pDest;
     }
 }
