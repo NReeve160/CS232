@@ -15,7 +15,30 @@
  *        BNode         : A class representing a BNode
  *    Additionally, it will contain a few functions working on Node
  * Author
- *    <your names here>
+ *  David Sloan
+ *      Time: 3 Hours
+ *      Challenges: Trying to keep up with the rest of the team as they
+ *      started and nearly finished the project on Monday before I was
+ *      able to even get started. I dedicated most of my time trying to
+ *      work on specific problems like the assign and swap functions.
+ *  Nathan Reeve
+ *      Time: 6 Hours
+ *      Challenges: The biggest problem I had was figuring out how the 
+ *      data was moving through the program and making sure that the 
+ *      pointers and access points were all going where they were 
+ *      supposed to go. I ended up making it more complicated than I 
+ *      needed to when adding to either the left or the right of the tree 
+ *      as well as swapping.
+ *  Everett Tsosie
+ *      Time: 3 Hours
+ *      Challenges: At first I thought assign() would have been the 
+ *      hardest to figure out. Then I realized that attaching the parents
+ *      to the child nodes was just like the exercise done in the copy()
+ *      function. The other error that stopped my momentum was setting
+ *      the deleted value in clear() to NULL right after deletion.
+ *  Stephen Harrison
+ *      Time: 5 Hours
+ *      Challenges: Assigning parent nodes.
  ************************************************************************/
 
 #pragma once
@@ -163,9 +186,9 @@ void clear(BNode <T> * & pThis)
 template <class T>
 inline void swap(BNode <T>*& pLHS, BNode <T>*& pRHS)
 {
-    BNode <T> * pTemp = pLHS;
-    pLHS = pRHS;
-    pRHS = pTemp;
+    BNode <T> * tempNode = pRHS; 
+    pRHS = pLHS;
+    pLHS = tempNode;
 
 }
 
@@ -199,18 +222,30 @@ BNode <T> * copy(const BNode <T> * pSrc)
 template <class T>
 void assign(BNode <T> * & pDest, const BNode <T>* pSrc)
 {
+   
     if (!pSrc) {
         clear(pDest);
         return;
     }
     if (!pDest && pSrc) {
         pDest = new BNode <T> (pSrc->data);
+        
         assign(pDest->pRight, pSrc->pRight);
         assign(pDest->pLeft, pSrc->pLeft);
+        if (pDest->pRight)
+            pDest->pRight->pParent = pDest;
+        if (pDest->pLeft)
+            pDest->pLeft->pParent = pDest;
     }
     if (pDest && pSrc) {
+        
         pDest->data = pSrc->data;
+        
         assign(pDest->pRight, pSrc->pRight);
         assign(pDest->pLeft, pSrc->pLeft);
+        if (pDest->pRight)
+            pDest->pRight->pParent = pDest;
+        if (pDest->pLeft)
+            pDest->pLeft->pParent = pDest;
     }
 }
