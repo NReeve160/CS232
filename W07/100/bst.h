@@ -45,17 +45,15 @@ public:
    //
    // Construct
    //
-
-   BST();
-   BST(const BST &  rhs);
-   BST(      BST && rhs);
-   BST(const std::initializer_list<T>& il);
+    BST();
+    BST(const BST& rhs);
+    BST(BST&& rhs);
+    BST(const std::initializer_list<T>& il);
    ~BST();
 
    //
    // Assign
    //
-
    BST & operator = (const BST &  rhs);
    BST & operator = (      BST && rhs);
    BST & operator = (const std::initializer_list<T>& il);
@@ -64,7 +62,6 @@ public:
    //
    // Iterator
    //
-
    class iterator;
    iterator   begin() const noexcept;
    iterator   end()   const noexcept { return iterator(nullptr); }
@@ -72,27 +69,23 @@ public:
    //
    // Access
    //
-
    iterator find(const T& t);
 
    // 
    // Insert
    //
-
    std::pair<iterator, bool> insert(const T&  t, bool keepUnique = false);
    std::pair<iterator, bool> insert(      T&& t, bool keepUnique = false);
 
    //
    // Remove
    // 
-
    iterator erase(iterator& it);
    void   clear() noexcept;
 
    // 
    // Status
    //
-
    bool   empty() const noexcept { return true; }
    size_t size()  const noexcept { return 99;   }
    
@@ -121,18 +114,21 @@ public:
    // 
    // Construct
    //
-   BNode()
-   {
-      pLeft = pRight = this;
-   }
-   BNode(const T &  t) 
-   {
-      pLeft = pRight = this; 
-   }
-   BNode(T && t) 
-   {  
-      pLeft = pRight = this;
-   }
+    BNode()
+    {
+        pParent = pLeft = pRight = NULL;
+        data = T();
+    }
+    BNode(const T& t)
+    {
+        pParent = pLeft = pRight = NULL;
+        data = t;
+    }
+    BNode(T&& t)
+    {
+        pParent = pLeft = pRight = NULL;
+        data = t;
+    }
 
    //
    // Insert
@@ -169,43 +165,50 @@ class BST <T> :: iterator
 {
 public:
    // constructors and assignment
-   iterator(BNode * p = nullptr)          
-   { 
+   iterator(BNode * p = nullptr) {
+      pNode = p;
    }
-   iterator(const iterator & rhs)         
-   { 
+
+   iterator(const iterator & rhs) { 
+      pNode = rhs.pNode;
    }
+
    iterator & operator = (const iterator & rhs)
    {
+      pNode = rhs.pNode;
       return *this;
    }
 
    // compare
    bool operator == (const iterator & rhs) const
    {
-      return true;
+      return rhs.pNode == pNode;
    }
    bool operator != (const iterator & rhs) const
    {
-      return true;
+      return rhs.pNode != pNode;
    }
 
    // de-reference. Cannot change because it will invalidate the BST
    const T & operator * () const 
    {
-      return *(new T);
+      return pNode->data;
    }
 
    // increment and decrement
    iterator & operator ++ ();
    iterator   operator ++ (int postfix)
    {
-      return *this;
+      iterator it = *this;
+      ++(*this);
+      return it;
    }
    iterator & operator -- ();
    iterator   operator -- (int postfix)
    {
-      return *this;;
+      iterator it = *this;
+      --(*this);
+      return it;
    }
 
    // must give friend status to remove so it can call getNode() from it
@@ -221,7 +224,6 @@ private:
     BNode * pNode;
 };
 
-
 /*********************************************
  *********************************************
  *********************************************
@@ -231,14 +233,15 @@ private:
  *********************************************/
 
 
+
  /*********************************************
   * BST :: DEFAULT CONSTRUCTOR
   ********************************************/
 template <typename T>
 BST <T> ::BST()
 {
-   numElements = 99;
-   root = new BNode;
+   numElements = 0;
+   root = nullptr;
 }
 
 /*********************************************
@@ -248,8 +251,10 @@ BST <T> ::BST()
 template <typename T>
 BST <T> :: BST ( const BST<T>& rhs) 
 {
-   numElements = 99;
-   root = new BNode;
+   numElements = 0;
+   root = nullptr;
+
+   *this = rhs;
 }
 
 /*********************************************
@@ -259,8 +264,11 @@ BST <T> :: BST ( const BST<T>& rhs)
 template <typename T>
 BST <T> :: BST(BST <T> && rhs) 
 {
-   numElements = 99;
-   root = new BNode;
+    root = rhs.root;
+    numElements = rhs.numElements;
+
+    rhs.root = nullptr;
+    rhs.numElements = 0;
 }
 
 /*********************************************
@@ -272,7 +280,6 @@ BST <T> :: ~BST()
 
 }
 
-
 /*********************************************
  * BST :: ASSIGNMENT OPERATOR
  * Copy one tree to another
@@ -280,6 +287,8 @@ BST <T> :: ~BST()
 template <typename T>
 BST <T> & BST <T> :: operator = (const BST <T> & rhs)
 {
+   //  assign(root, rhs.root);
+   //  numElements = rhs.numElements;
    return *this;
 }
 
@@ -290,7 +299,11 @@ BST <T> & BST <T> :: operator = (const BST <T> & rhs)
 template <typename T>
 BST <T> & BST <T> :: operator = (const std::initializer_list<T>& il)
 {
-   return *this;
+    clear();
+    for (int i = 0; i < il; i++)
+        insert(i);
+    return *this;
+
 }
 
 /*********************************************
@@ -300,6 +313,9 @@ BST <T> & BST <T> :: operator = (const std::initializer_list<T>& il)
 template <typename T>
 BST <T> & BST <T> :: operator = (BST <T> && rhs)
 {
+    clear();
+    swap(rhs);
+
    return *this;
 }
 
@@ -310,7 +326,13 @@ BST <T> & BST <T> :: operator = (BST <T> && rhs)
 template <typename T>
 void BST <T> :: swap (BST <T>& rhs)
 {
+    BNode* tempRoot = rhs.root;
+    rhs.root = root;
+    root = tempRoot;
 
+    size_t tempElements = rhs.numElements;
+    rhs.numElements = numElements;
+    numElements = tempElements;
 }
 
 /*****************************************************
@@ -336,8 +358,51 @@ std::pair<typename BST <T> ::iterator, bool> BST <T> ::insert(T && t, bool keepU
  * Remove a given node as specified by the iterator
  ************************************************/
 template <typename T>
-typename BST <T> ::iterator BST <T> :: erase(iterator & it)
-{  
+typename BST <T> :: iterator BST <T> :: erase(iterator & it) {
+   //TODO: Just the Pseudocode comeback and make sure it works.
+   // //Case 1 No Children
+   // if(it.pRight == NULL && it.pLeft == NULL) { // if(!it.pRight && !it.pLeft) {
+   //    if(it.pParent != NULL && it.pParent.pRight == it) { // if(it.pParent && it.pParent.pRight == it)
+   //       it.pParent.pRight = NULL;
+   //    }
+      
+   //    if(it.pParent != NULL && it.pParent.pLeft == it) { // if(it.pParent && it.pParent.pLeft == it)
+   //       it.pParent.pLeft = NULL;
+   //    }
+
+   //    delete it;
+   // }
+
+   // //Case 2 One Child
+   // if(it.pRight == NULL && it.pLeft != NULL) { // if(!it.pRight && it.pLeft) {
+   //    it.pLeft.pParent = it.pParent;
+   //    if(it.pParent != NULL && it.pParent.pRight == it) { // if(it.pParent && it.pParent.pRight == it)
+   //       it.pParent.pRight = it.pLeft;
+   //    }
+
+   //    if(it.pParent != NULL && it.pParent.pLeft == it) { // if(it.pParent && it.pParent.pLeft == it)
+   //       it.pParent.pLeft = it.pLeft;
+   //    }
+
+   //    delete it;
+   // }
+
+   // if(it.pLeft == NULL && it.pRight != NULL) { // if(!it.pLeft && it.pRight)
+   //    it.pRight.pParent = it.pParent;
+   //    if(it.pParent != NULL && it.pParent.pRight == it) { // if(it.pParent && it.pParent.pRight == it)
+   //       it.pParent.pRight = it.pRight;
+   //    }
+
+   //    if(it.pParent != NULL && it.pParent.pLeft == it)  { // if(it.pParent && it.pParent.pLeft == it)
+   //       it.pParent.pLeft = it.pRight;
+   //    }
+
+   //    delete it;
+   // }
+
+   // //Case 3 Two Children
+   // //TODO
+
    return end();
 }
 
@@ -358,7 +423,13 @@ void BST <T> ::clear() noexcept
 template <typename T>
 typename BST <T> :: iterator custom :: BST <T> :: begin() const noexcept
 {
-   return end();
+    if (empty())
+        return end();
+    BNode * p = root;
+    while (p->pLeft) {
+        p = p->pLeft;
+    }
+    return iterator(p);
 }
 
 
@@ -369,6 +440,18 @@ typename BST <T> :: iterator custom :: BST <T> :: begin() const noexcept
 template <typename T>
 typename BST <T> :: iterator BST<T> :: find(const T & t)
 {
+    BNode * p = root;
+
+    while(p) {
+        if (p->data == t) {
+            return iterator(p);
+        }
+        else if(t < p->data) {
+            p = p->pLeft;
+        }
+        else
+            p = p->pRight;
+    }
    return end();
 }
 
@@ -474,5 +557,3 @@ typename BST <T> :: iterator & BST <T> :: iterator :: operator -- ()
 
 
 } // namespace custom
-
-
