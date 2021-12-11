@@ -28,7 +28,8 @@
 *      Time: 4 hours
 *      Challenges: I mostly worked on getting the iterator set up and trying to figure out how to
 *      a for each loop in C++. I also had issues with getting seg fault errors upon compiling after
-*      getting certain portions of the code up and running. I had to get the work from another *      teammate to make it work.
+*      getting certain portions of the code up and running. I had to get the work from another 
+*      teammate to make it work.
 *
 *   Stephen Harrison
 *      Time: N/A

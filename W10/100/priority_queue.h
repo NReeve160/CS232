@@ -13,7 +13,7 @@
  *    This will contain the class definition of:
  *        priority_queue          : A class that represents a Priority Queue
  * Author
- *    <your names here>
+ *    David Sloan
  ************************************************************************/
 
 #pragma once
@@ -36,25 +36,37 @@ public:
    //
    // construct
    //
-   priority_queue() 
-   {
+   priority_queue() {
+      container.numElements = 0;
    }
-   priority_queue(const priority_queue &  rhs)  
-   { 
+
+   priority_queue(const priority_queue &  rhs) {
+      // *this = rhs;
    }
-   priority_queue(priority_queue && rhs)  
-   { 
+
+   priority_queue(priority_queue && rhs) {
+      // *this = std::move(rhs);
    }
+
    template <class Iterator>
-   priority_queue(Iterator first, Iterator last) 
-   {
+   priority_queue(Iterator first, Iterator last) {
+      container.reserve(last - first);
+      for (int element = first; last; first++)
+      {
+         push(element);
+         first == first++;
+      }
+      
    }
-   explicit priority_queue (custom::vector<T> && rhs) 
-   {
+
+   explicit priority_queue (custom::vector<T> && rhs) {
+      //TODO
    }
-   explicit priority_queue (custom::vector<T>& rhs)
-   {
+
+   explicit priority_queue (custom::vector<T>& rhs) {
+      //TODO
    }
+
   ~priority_queue() {}
 
    //
@@ -76,12 +88,11 @@ public:
    //
    // Status
    //
-   size_t size()  const 
-   { 
+   size_t size()  const { 
       return 99;   
    }
-   bool empty() const 
-   { 
+
+   bool empty() const { 
       return false;  
    }
    
@@ -102,9 +113,8 @@ private:
  * Get the maximum item from the heap: the top item.
  ***********************************************/
 template <class T>
-const T & priority_queue <T> :: top() const
-{
-   return *(new T);
+const T & priority_queue <T> :: top() const {
+   return container.front();
 }
 
 /**********************************************
@@ -112,8 +122,8 @@ const T & priority_queue <T> :: top() const
  * Delete the top item from the heap.
  **********************************************/
 template <class T>
-void priority_queue <T> :: pop()
-{
+void priority_queue <T> :: pop() {
+   //TODO
 }
 
 /*****************************************
@@ -121,12 +131,13 @@ void priority_queue <T> :: pop()
  * Add a new element to the heap, reallocating as necessary
  ****************************************/
 template <class T>
-void priority_queue <T> :: push(const T & t)
-{
+void priority_queue <T> :: push(const T & t) {
+   //TODO
 }
+
 template <class T>
-void priority_queue <T> :: push(T && t)
-{
+void priority_queue <T> :: push(T && t) {
+   //TODO
 }
 
 /************************************************
@@ -136,8 +147,7 @@ void priority_queue <T> :: push(T && t)
  * Return TRUE if anything changed.
  ************************************************/
 template <class T>
-bool priority_queue <T> :: percolateDown(size_t indexHeap)
-{
+bool priority_queue <T> :: percolateDown(size_t indexHeap) {
    return false;
 }
 
@@ -145,6 +155,6 @@ bool priority_queue <T> :: percolateDown(size_t indexHeap)
 
 template <class T>
 inline void swap(custom::priority_queue <T> & lhs,
-                 custom::priority_queue <T> & rhs)
-{
+                 custom::priority_queue <T> & rhs) {
+   //TODO
 }
